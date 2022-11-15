@@ -11,7 +11,7 @@ function App() {
     const [popped, setPopped] = useState<TPoint[]>([]);
 
     function handlePlaceCirlce(e: React.MouseEvent<HTMLDivElement>) {
-        console.log(e);
+        // console.log(e);
         const { clientX, clientY } = e;
         setPoints([
             ...points,
@@ -32,22 +32,35 @@ function App() {
     }
 
     function handleRedo() {
+        // v1
+        // const newPopped = [...popped];
+        // const newPoints = [...points];
+        // const poppedPoint = newPopped.pop();
+        // if (!poppedPoint) return;
+        // newPoints.push(poppedPoint);
+        // setPoints(newPoints);
+        // setPopped(newPopped);
+
+        // refactored v2
         const newPopped = [...popped];
-        const newPoints = [...points];
         const poppedPoint = newPopped.pop();
         if (!poppedPoint) return;
-        newPoints.push(poppedPoint);
-        setPoints(newPoints);
+        setPoints([...points, poppedPoint]);
         setPopped(newPopped);
     }
 
     return (
         <>
-            <button onClick={handleUndo}>Undo</button>
-            <button onClick={handleRedo}>Redo</button>
+            <button disabled={points.length === 0} onClick={handleUndo}>
+                Undo
+            </button>
+            <button disabled={popped.length === 0} onClick={handleRedo}>
+                Redo
+            </button>
             <div className="App" onClick={handlePlaceCirlce}>
-                {points.map((point) => (
+                {points.map((point, idx) => (
                     <div
+                        key={idx}
                         className="point"
                         style={{
                             left: point.x - 5 + "px",
